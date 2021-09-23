@@ -1,39 +1,26 @@
-import collections
-from typing import Final
-
-EPSILON: Final[str] = 'epsilon'
-
-
-def nested_dict():
-    return collections.defaultdict(nested_dict)
+from finite_automaton import FiniteAutomaton
 
 
 def read_data(file: str):
     f = open(file, 'r')
-    alphabet: list[str] = f.readline().split('=')[1].removesuffix('\n').split(',')
-    states: list[str] = f.readline().split('=')[1].removesuffix('\n').split(',')
-    initial_state: str = f.readline().split('=')[1].removesuffix('\n')
-    final_states: list[str] = f.readline().split('=')[1].removesuffix('\n').split(',')
+    fa = FiniteAutomaton()
 
-    f.readline()  # 'transicoes'
-    transitions = nested_dict()
+    fa.alphabet = set(f.readline().split('=')[1].removesuffix('\n').split(','))
+    fa.states = set(f.readline().split('=')[1].removesuffix('\n').split(','))
+    fa.initial_state = f.readline().split('=')[1].removesuffix('\n')
+    fa.final_states = set(f.readline().split('=')[1].removesuffix('\n').split(','))
 
+    f.readline()  # reading 'transicoes'
     for line in f:
         transition = line.removesuffix('\n').split(',')
-        transitions[transition[0]][transition[1]] = transition[2]
-
-    print('alphabet:', end='')
-    print(alphabet)
-    print('states:', end='')
-    print(states)
-    print('initial_state:' + initial_state)
-    print('final_states:', end='')
-    print(final_states)
-    print('transitions')
-    print(transitions)
+        fa.transitions[transition[0]][transition[2]].append(transition[1])
 
     f.close()
 
+    return fa
+
 
 if __name__ == '__main__':
-    read_data('input.txt')
+    finite_automaton: FiniteAutomaton = read_data('afn2ex1.txt')
+    input_chain: str = input('Input chain: ')
+    finite_automaton.process(input_chain)
