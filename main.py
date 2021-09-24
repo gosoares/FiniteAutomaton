@@ -21,7 +21,7 @@ def read_data(file: str) -> FiniteAutomaton:
 
 
 if __name__ == '__main__':
-    finite_automaton: FiniteAutomaton = read_data('afn2ex2.txt')
+    finite_automaton: FiniteAutomaton = read_data('afn2ex5.txt')
     input_chain: str = input('Input chain: ')
     accepted = finite_automaton.process(input_chain)
     print('\nResult: ' + ('ACCEPTED' if accepted else 'REJECTED') + '!')
