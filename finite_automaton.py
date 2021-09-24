@@ -13,8 +13,8 @@ class FiniteAutomaton:
         self.transitions: dict[str, dict[str, list[str]]] = collections.defaultdict(
             lambda: collections.defaultdict(list))
 
-    def __dfs(self, state: str, chain: str, n: int):
-        state_print = (' | ' * n) + state
+    def __dfs(self, state: str, chain: str, n: int, through: list[str]):
+        state_print = (' | ' * n) + state + ('({})'.format(','.join(through)) if through else '')
 
         if len(chain) == n:  # ended processing chain
             print(state_print + ': ' + ('Accept' if state in self.final_states else 'Reject'))
@@ -26,10 +26,12 @@ class FiniteAutomaton:
             else:
                 print(state_print)
                 for s in self.transitions[state][symbol]:
-                    self.__dfs(s, chain, n + 1)
+                    self.__dfs(s, chain, n + 1, [])
 
+        through.append(state)
         for s in self.transitions[state][FiniteAutomaton.EPSILON]:  # empty chain transitions
-            self.__dfs(s, chain, n)
+            self.__dfs(s, chain, n, through)
+        through.pop()
 
     def process(self, chain):
-        return self.__dfs(self.initial_state, chain, 0)
+        return self.__dfs(self.initial_state, chain, 0, [])
