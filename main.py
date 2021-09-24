@@ -23,7 +23,7 @@ def read_data(file: str) -> FiniteAutomaton:
 
 
 if __name__ == '__main__':
-    filename: str = 'afn2ex5.txt'
+    filename: str = 'input/afn2ex5.txt'
     if len(sys.argv) == 2:
         filename = sys.argv[1]
 
