@@ -1,5 +1,6 @@
 import collections
 from typing import Final
+import pptree
 
 
 class FiniteAutomaton:
@@ -13,29 +14,35 @@ class FiniteAutomaton:
         self.transitions: dict[str, dict[str, list[str]]] = collections.defaultdict(
             lambda: collections.defaultdict(list))
 
-    def __dfs(self, state: str, chain: str, n: int, through: list[str]) -> bool:
+    def __dfs(self, state: str, chain: str, n: int, through: list[str], parent: pptree.Node) -> bool:
         accept = False
-        state_print = (' | ' * n) + state + ('({})'.format(','.join(through)) if through else '')
+        state_data = state + ('({})'.format(','.join(through)) if through else '')
 
         if len(chain) == n:  # ended processing chain
             accept = state in self.final_states
-            print(state_print + ': ' + ('Accept' if accept else 'Reject'))
+            pptree.Node(state_data + ': ' + ('Accept' if accept else 'Reject'), parent)
         else:
             symbol = chain[n]
 
             if not self.transitions[state][symbol]:  # crash
-                print(state_print + ': Reject')
+                pptree.Node(state_data + ': Reject', parent)
             else:
-                print(state_print)
+                p_node = pptree.Node(state_data, parent)
                 for s in self.transitions[state][symbol]:
-                    accept |= self.__dfs(s, chain, n + 1, [])
+                    accept |= self.__dfs(s, chain, n + 1, [], p_node)
 
         through.append(state)
         for s in self.transitions[state][FiniteAutomaton.EPSILON]:  # empty chain transitions
-            accept |= self.__dfs(s, chain, n, through)
+            accept |= self.__dfs(s, chain, n, through, parent)
         through.pop()
 
         return accept
 
     def process(self, chain) -> bool:
-        return self.__dfs(self.initial_state, chain, 0, [])
+        p_root: pptree.Node = pptree.Node('initial')
+        accepted = self.__dfs(self.initial_state, chain, 0, [], p_root)
+
+        for p_node in p_root.children:
+            pptree.print_tree(p_node)
+
+        return accepted
