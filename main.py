@@ -1,7 +1,7 @@
 from finite_automaton import FiniteAutomaton
 
 
-def read_data(file: str):
+def read_data(file: str) -> FiniteAutomaton:
     f = open(file, 'r')
     fa = FiniteAutomaton()
 
@@ -21,6 +21,7 @@ def read_data(file: str):
 
 
 if __name__ == '__main__':
-    finite_automaton: FiniteAutomaton = read_data('afn2ex1.txt')
+    finite_automaton: FiniteAutomaton = read_data('afn2ex2.txt')
     input_chain: str = input('Input chain: ')
-    finite_automaton.process(input_chain)
+    accepted = finite_automaton.process(input_chain)
+    print('\nResult: ' + ('ACCEPTED' if accepted else 'REJECTED') + '!')
