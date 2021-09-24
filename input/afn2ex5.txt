@@ -1,7 +1,7 @@
 alfabeto=0,1
 estados=q1,q2,q3,q4
 inicial=q1
-finais=
+finais=q4
 transicoes
 q1,q1,0
 q1,q1,1
