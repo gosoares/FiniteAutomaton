@@ -24,16 +24,15 @@ class FiniteAutomaton:
             symbol = chain[n]
 
             if not self.transitions[state][symbol]:  # crash
-                print(state_print + ': Reject')
+                print(state_print + ': Reject (Crash)')
             else:
                 print(state_print)
                 for s in self.transitions[state][symbol]:
                     accept |= self.__dfs(s, chain, n + 1, [])
 
-        through.append(state)
         for s in self.transitions[state][FiniteAutomaton.EPSILON]:  # empty chain transitions
-            accept |= self.__dfs(s, chain, n, through)
-        through.pop()
+            if s not in through:  # avoid empty chain transitions loop
+                accept |= self.__dfs(s, chain, n, through + [state])
 
         return accept
 
