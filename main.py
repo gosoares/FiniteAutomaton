@@ -1,3 +1,5 @@
+import sys
+
 from finite_automaton import FiniteAutomaton
 
 
@@ -21,7 +23,11 @@ def read_data(file: str) -> FiniteAutomaton:
 
 
 if __name__ == '__main__':
-    finite_automaton: FiniteAutomaton = read_data('afn2ex5.txt')
+    filename: str = 'afn2ex5.txt'
+    if len(sys.argv) == 2:
+        filename = sys.argv[1]
+
+    finite_automaton: FiniteAutomaton = read_data(filename)
     input_chain: str = input('Input chain: ')
     accepted = finite_automaton.process(input_chain)
     print('\nResult: ' + ('ACCEPTED' if accepted else 'REJECTED') + '!')
